@@ -1,0 +1,27 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: loan-management-service
+
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show_sql: true
+
+    properties:
+      hibernate:
+        default_batch_fetch_size: 20
+        jdbc:
+          batch_size: 50
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+security:
+  jwt:
+    issuer: apigateway #.env
+    secret: McHowHFh9zfPUjAu6VdpgKm+zzOTzrpNmElKZana3RM= #.env
