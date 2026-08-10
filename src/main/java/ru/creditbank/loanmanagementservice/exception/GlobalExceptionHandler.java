@@ -36,4 +36,18 @@ public class GlobalExceptionHandler {
         .status(HttpStatus.NOT_FOUND)
         .body(response);
   }
+
+  @ExceptionHandler(InvalidLoanStatusException.class)
+  public ResponseEntity<ErrorResponseDTO> handleBadCredentials(
+      InvalidLoanStatusException exception
+  ) {
+    ErrorResponseDTO response = new ErrorResponseDTO(
+        HttpStatus.CONFLICT.value(),
+        exception.getMessage()
+    );
+
+    return ResponseEntity
+        .status(HttpStatus.CONFLICT)
+        .body(response);
+  }
 }

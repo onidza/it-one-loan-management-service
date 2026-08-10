@@ -80,6 +80,9 @@ public class LoanEntity {
   )
   private Instant creationDate;
 
+  @Column(name = "activated_at")
+  private Instant activatedAt;
+
   @UpdateTimestamp
   @Column(name = "last_updated", nullable = false)
   private Instant lastUpdated;
@@ -103,7 +106,11 @@ public class LoanEntity {
     this.status = LoanStatus.CREATING;
   }
 
-  public void activate(LocalDate nextPaymentDate) {
+  public void activate(
+      Instant activatedAt,
+      LocalDate nextPaymentDate
+  ) {
+    this.activatedAt = activatedAt;
     this.nextPaymentDate = nextPaymentDate;
     this.status = LoanStatus.ACTIVE;
   }
