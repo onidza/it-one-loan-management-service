@@ -1,8 +1,13 @@
 package ru.creditbank.loanmanagementservice.exception;
 
-public class DuplicateLoanException extends RuntimeException {
+import org.springframework.http.HttpStatus;
 
-  public DuplicateLoanException(String message) {
-    super(message);
+public class DuplicateLoanException extends BusinessException {
+
+  public DuplicateLoanException() {
+    super(
+        "Loan has already been submitted",
+        HttpStatus.BAD_REQUEST
+    );
   }
 }

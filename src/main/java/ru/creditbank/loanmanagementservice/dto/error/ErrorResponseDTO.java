@@ -1,8 +1,13 @@
 package ru.creditbank.loanmanagementservice.dto.error;
 
+import java.time.LocalDateTime;
+
 public record ErrorResponseDTO(
+    LocalDateTime timestamp,
     int status,
-    String message
+    String error,
+    String message,
+    String path
 ) {
 
 }

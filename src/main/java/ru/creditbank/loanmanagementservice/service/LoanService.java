@@ -9,11 +9,9 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.creditbank.loanmanagementservice.calculator.PaymentScheduleCalculator;
-import ru.creditbank.loanmanagementservice.dto.UserLoansResponseDTO;
 import ru.creditbank.loanmanagementservice.dto.calculate.SchedulePayment;
 import ru.creditbank.loanmanagementservice.dto.internal.CreateLoanRequestDTO;
 import ru.creditbank.loanmanagementservice.dto.internal.CreateLoanResponseDTO;
@@ -41,7 +39,7 @@ public class LoanService {
   @Transactional(rollbackFor = Exception.class)
   public CreateLoanResponseDTO createLoan(CreateLoanRequestDTO request) {
     if (loanRepository.existsByCreditApplicationId(request.creditApplicationId())) {
-      throw new DuplicateLoanException("Loan has already been submitted");
+      throw new DuplicateLoanException();
     }
 
     log.info("Loan for credit id = {} and user id = {} was created",
@@ -73,9 +71,7 @@ public class LoanService {
         .orElseThrow(() -> new LoanNotFoundException(loanId));
 
     if (loan.getStatus() != LoanStatus.CREATING) {
-      throw new InvalidLoanStatusException(
-          "Payment schedule can only be created for loan in CREATING status"
-      );
+      throw new InvalidLoanStatusException();
     }
 
     Instant activatedAt = clock.instant();
