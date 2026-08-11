@@ -42,9 +42,6 @@ public class LoanService {
       throw new DuplicateLoanException();
     }
 
-    log.info("Loan for credit id = {} and user id = {} was created",
-        request.creditApplicationId(), request.userId());
-
     LoanEntity loan = loanRepository.save(
         new LoanEntity(
             request.creditApplicationId(),
@@ -62,7 +59,6 @@ public class LoanService {
         loan.getId(),
         loan.getStatus()
     );
-
   }
 
   @Transactional(rollbackFor = Exception.class)
@@ -104,10 +100,25 @@ public class LoanService {
       );
 
       schedule.add(scheduleLine);
+      remainingPrincipal = calculation.remainingPrincipal();
     }
 
     paymentScheduleRepository.saveAll(schedule);
+
+    log.info(
+        "Payment schedule created for loanId = {}, installmentsCount = {}",
+        loanId,
+        schedule.size()
+    );
+
     loan.activate(activatedAt, firstPaymentDate);
+
+    log.info(
+        "Loan activated, loanId = {}, activatedAt = {}, firstPaymentDate = {}",
+        loanId,
+        activatedAt,
+        firstPaymentDate
+    );
 
     return new CreateScheduleResponseDTO(
         loan.getId(),

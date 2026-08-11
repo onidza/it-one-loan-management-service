@@ -3,6 +3,7 @@ package ru.creditbank.loanmanagementservice.dto.internal;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
@@ -42,7 +43,10 @@ public record CreateLoanRequestDTO(
         fraction = 2,
         message = "Interest rate must have up to 3 integer digits and 2 decimal places"
     )
-    BigDecimal interestRate
+    BigDecimal interestRate,
+
+    @NotBlank(message = "Access token must not be blank")
+    String accessToken
 ) {
 
 }
