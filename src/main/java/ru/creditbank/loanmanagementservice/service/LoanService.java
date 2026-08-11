@@ -16,6 +16,7 @@ import ru.creditbank.loanmanagementservice.dto.calculate.SchedulePayment;
 import ru.creditbank.loanmanagementservice.dto.internal.CreateLoanRequestDTO;
 import ru.creditbank.loanmanagementservice.dto.internal.CreateLoanResponseDTO;
 import ru.creditbank.loanmanagementservice.dto.internal.CreateScheduleResponseDTO;
+import ru.creditbank.loanmanagementservice.dto.loanInfo.UserLoansResponseDTO;
 import ru.creditbank.loanmanagementservice.entity.LoanEntity;
 import ru.creditbank.loanmanagementservice.entity.LoanStatus;
 import ru.creditbank.loanmanagementservice.entity.PaymentScheduleEntity;
@@ -126,5 +127,10 @@ public class LoanService {
         firstPaymentDate,
         loan.getStatus()
     );
+  }
+
+  @Transactional(readOnly = true)
+  public UserLoansResponseDTO getUserLoans(String subject) {
+
   }
 }
