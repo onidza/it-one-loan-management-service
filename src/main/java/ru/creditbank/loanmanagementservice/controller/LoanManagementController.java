@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.creditbank.loanmanagementservice.dto.loan.UserLoansResponseDTO;
 import ru.creditbank.loanmanagementservice.dto.payment.CreatePaymentRequestDTO;
 import ru.creditbank.loanmanagementservice.dto.payment.PaymentHistoryResponseDTO;
 import ru.creditbank.loanmanagementservice.dto.payment.PaymentResponseDTO;
-import ru.creditbank.loanmanagementservice.dto.loanInfo.UserLoansResponseDTO;
 import ru.creditbank.loanmanagementservice.service.LoanService;
 import ru.creditbank.loanmanagementservice.service.PaymentService;
 
@@ -32,7 +32,7 @@ public class LoanManagementController {
   public UserLoansResponseDTO getUserLoans(
       @AuthenticationPrincipal Jwt jwt
   ) {
-    return loanService.getUserLoans(jwt.getSubject());
+    return loanService.getUserLoans(jwt);
   }
 
   @PostMapping
@@ -40,15 +40,14 @@ public class LoanManagementController {
       @Valid @RequestBody CreatePaymentRequestDTO request,
       @AuthenticationPrincipal Jwt jwt
   ) {
-    return paymentService.createPayment(request, jwt.getSubject());
+    return paymentService.createPayment(request, jwt);
   }
 
   @GetMapping("/history")
   public PaymentHistoryResponseDTO getPaymentHistory(
-      @RequestParam UUID loanId,
-      @AuthenticationPrincipal Jwt jwt
+      @RequestParam UUID loanId
   ) {
-    return paymentService.getPaymentHistory(loanId, jwt.getSubject());
+    return paymentService.getPaymentHistory(loanId);
   }
 
 }

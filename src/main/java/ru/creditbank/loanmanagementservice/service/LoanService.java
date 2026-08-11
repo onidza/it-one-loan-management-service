@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.creditbank.loanmanagementservice.calculator.PaymentScheduleCalculator;
@@ -16,12 +17,13 @@ import ru.creditbank.loanmanagementservice.dto.calculate.SchedulePayment;
 import ru.creditbank.loanmanagementservice.dto.internal.CreateLoanRequestDTO;
 import ru.creditbank.loanmanagementservice.dto.internal.CreateLoanResponseDTO;
 import ru.creditbank.loanmanagementservice.dto.internal.CreateScheduleResponseDTO;
-import ru.creditbank.loanmanagementservice.dto.loanInfo.UserLoansResponseDTO;
+import ru.creditbank.loanmanagementservice.dto.loan.LoanInfoDTO;
+import ru.creditbank.loanmanagementservice.dto.loan.UserLoansResponseDTO;
 import ru.creditbank.loanmanagementservice.entity.LoanEntity;
 import ru.creditbank.loanmanagementservice.entity.LoanStatus;
 import ru.creditbank.loanmanagementservice.entity.PaymentScheduleEntity;
 import ru.creditbank.loanmanagementservice.exception.DuplicateLoanException;
-import ru.creditbank.loanmanagementservice.exception.InvalidLoanStatusException;
+import ru.creditbank.loanmanagementservice.exception.InvalidLoanStatusCreateScheduleException;
 import ru.creditbank.loanmanagementservice.exception.LoanNotFoundException;
 import ru.creditbank.loanmanagementservice.repository.LoanRepository;
 import ru.creditbank.loanmanagementservice.repository.PaymentScheduleRepository;
@@ -68,7 +70,7 @@ public class LoanService {
         .orElseThrow(() -> new LoanNotFoundException(loanId));
 
     if (loan.getStatus() != LoanStatus.CREATING) {
-      throw new InvalidLoanStatusException();
+      throw new InvalidLoanStatusCreateScheduleException();
     }
 
     Instant activatedAt = clock.instant();
@@ -130,7 +132,21 @@ public class LoanService {
   }
 
   @Transactional(readOnly = true)
-  public UserLoansResponseDTO getUserLoans(String subject) {
+  public UserLoansResponseDTO getUserLoans(Jwt jwt) {
+    UUID userId = UUID.fromString(jwt.getClaimAsString("user_id"));
 
+    List<LoanInfoDTO> loans = loanRepository.findAllByUserId(userId)
+        .stream()
+        .map(loanEntity ->
+            new LoanInfoDTO(
+              loanEntity.getId(),
+              loanEntity.getTotalAmount(),
+              loanEntity.getRemainingAmount(),
+              loanEntity.getNextPaymentDate(),
+              loanEntity.getStatus()
+            ))
+        .toList();
+
+    return new UserLoansResponseDTO(loans);
   }
 }

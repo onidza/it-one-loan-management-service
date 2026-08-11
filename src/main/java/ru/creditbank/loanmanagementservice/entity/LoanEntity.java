@@ -27,14 +27,17 @@ public class LoanEntity {
 
   @Column(name = "term_months", nullable = false)
   Integer termMonths;
+
   @Column(
       name = "interest_rate",
       precision = 5,
       scale = 2,
       nullable = false)
   BigDecimal interestRate;
+
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
+
   private UUID id;
   @Column(
       name = "credit_application_id",
@@ -42,8 +45,10 @@ public class LoanEntity {
       unique = true
   )
   private UUID creditApplicationId;
+
   @Column(name = "user_id", nullable = false)
   private UUID userId;
+
   @Column(
       name = "total_amount",
       precision = 15,

@@ -1,5 +1,9 @@
 package ru.creditbank.loanmanagementservice.dto.payment;
 
-public record PaymentHistoryResponseDTO() {
+import java.util.List;
+
+public record PaymentHistoryResponseDTO(
+    List<PaymentHistoryItemDTO> payments
+) {
 
 }
