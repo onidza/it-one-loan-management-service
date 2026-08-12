@@ -26,14 +26,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class LoanEntity {
 
   @Column(name = "term_months", nullable = false)
-  Integer termMonths;
+  private Integer termMonths;
 
   @Column(
       name = "interest_rate",
       precision = 5,
       scale = 2,
       nullable = false)
-  BigDecimal interestRate;
+  private BigDecimal interestRate;
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

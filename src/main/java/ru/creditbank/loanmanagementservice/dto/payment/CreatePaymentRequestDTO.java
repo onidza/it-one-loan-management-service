@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.UUID;
+import ru.creditbank.loanmanagementservice.entity.PaymentType;
 
 public record CreatePaymentRequestDTO(
 

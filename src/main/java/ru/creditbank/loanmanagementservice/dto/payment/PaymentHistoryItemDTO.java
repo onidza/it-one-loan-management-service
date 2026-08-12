@@ -3,6 +3,7 @@ package ru.creditbank.loanmanagementservice.dto.payment;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
+import ru.creditbank.loanmanagementservice.entity.PaymentType;
 
 public record PaymentHistoryItemDTO(
     UUID paymentId,

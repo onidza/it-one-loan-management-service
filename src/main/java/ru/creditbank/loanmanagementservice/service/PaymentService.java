@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.creditbank.loanmanagementservice.dto.payment.CreatePaymentRequestDTO;
 import ru.creditbank.loanmanagementservice.dto.payment.PaymentHistoryItemDTO;
 import ru.creditbank.loanmanagementservice.dto.payment.PaymentHistoryResponseDTO;
@@ -17,6 +18,7 @@ import ru.creditbank.loanmanagementservice.entity.PaymentEntity;
 import ru.creditbank.loanmanagementservice.exception.InvalidLoanStatePaymentException;
 import ru.creditbank.loanmanagementservice.exception.LoanAccessDeniedException;
 import ru.creditbank.loanmanagementservice.exception.LoanNotFoundException;
+import ru.creditbank.loanmanagementservice.exception.PaymentsNotFoundException;
 import ru.creditbank.loanmanagementservice.repository.LoanRepository;
 import ru.creditbank.loanmanagementservice.repository.PaymentRepository;
 import ru.creditbank.loanmanagementservice.strategy.PaymentStrategy;
@@ -31,6 +33,7 @@ public class PaymentService {
   private final LoanRepository loanRepository;
   private final PaymentStrategyResolver paymentStrategyResolver;
 
+  @Transactional(rollbackFor = Exception.class)
   public PaymentResponseDTO createPayment(
       CreatePaymentRequestDTO request,
       Jwt jwt
@@ -72,7 +75,19 @@ public class PaymentService {
     );
   }
 
-  public PaymentHistoryResponseDTO getPaymentHistory(UUID loanId) {
+  @Transactional(readOnly = true)
+  public PaymentHistoryResponseDTO getPaymentHistory(
+      UUID loanId,
+      Jwt jwt
+  ) {
+    LoanEntity loan = loanRepository.findById(loanId)
+        .orElseThrow(() -> new LoanNotFoundException(loanId));
+
+    UUID userId = UUID.fromString(jwt.getClaimAsString("user_id"));
+    if (!userId.equals(loan.getUserId())) {
+      throw new LoanAccessDeniedException();
+    }
+
     List<PaymentHistoryItemDTO> payments =
         paymentRepository.findAllByLoanId(loanId)
             .stream()
@@ -86,7 +101,7 @@ public class PaymentService {
             .toList();
 
     if (payments.isEmpty()) {
-      throw new LoanNotFoundException(loanId);
+      throw new PaymentsNotFoundException(loanId);
     }
 
     return new PaymentHistoryResponseDTO(payments);

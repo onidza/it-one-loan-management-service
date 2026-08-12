@@ -19,7 +19,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import ru.creditbank.loanmanagementservice.dto.payment.PaymentType;
 
 @Entity
 @Table(name = "payments")

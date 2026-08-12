@@ -45,8 +45,9 @@ public class LoanManagementController {
 
   @GetMapping("/history")
   public PaymentHistoryResponseDTO getPaymentHistory(
-      @RequestParam UUID loanId
+      @RequestParam UUID loanId,
+      @AuthenticationPrincipal Jwt jwt
   ) {
-    return paymentService.getPaymentHistory(loanId);
+    return paymentService.getPaymentHistory(loanId, jwt);
   }
 }

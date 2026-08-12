@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.Version;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -55,7 +56,6 @@ public class PaymentScheduleEntity {
   @Column(name = "payment_date", nullable = false)
   private LocalDate paymentDate;
 
-  //FIXED: need to pay for this month without %
   @Column(
       name = "principal_amount",
       precision = 15,
@@ -64,7 +64,6 @@ public class PaymentScheduleEntity {
   )
   private BigDecimal principalAmount;
 
-  //FIXED: % for this month
   @Column(
       name = "interest_amount",
       precision = 15,
@@ -73,7 +72,6 @@ public class PaymentScheduleEntity {
   )
   private BigDecimal interestAmount;
 
-  //FIXED: full payment = principalAmount + interestAmount
   @Column(
       name = "total_amount",
       precision = 15,
@@ -82,7 +80,6 @@ public class PaymentScheduleEntity {
   )
   private BigDecimal totalAmount;
 
-  //FIXED: expected remaining loan amount after this full payment
   @Column(
       name = "remaining_principal",
       precision = 15,
@@ -91,7 +88,6 @@ public class PaymentScheduleEntity {
   )
   private BigDecimal remainingPrincipal;
 
-  //sum of payments for this installment, default = 0
   @Column(
       name = "paid_amount",
       precision = 15,
@@ -111,6 +107,9 @@ public class PaymentScheduleEntity {
   @UpdateTimestamp
   @Column(name = "updated_at", nullable = false)
   private Instant updatedAt;
+
+  @Version
+  private Long version;
 
   public PaymentScheduleEntity(
       LoanEntity loan,

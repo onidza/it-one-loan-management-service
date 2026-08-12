@@ -1,7 +1,7 @@
 package ru.creditbank.loanmanagementservice.exception;
 
 import org.springframework.http.HttpStatus;
-import ru.creditbank.loanmanagementservice.dto.payment.PaymentType;
+import ru.creditbank.loanmanagementservice.entity.PaymentType;
 
 public class UnsupportedPaymentType extends BusinessException {
 

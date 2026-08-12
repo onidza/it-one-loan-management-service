@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.creditbank.loanmanagementservice.dto.payment.PaymentProcessingResultDTO;
-import ru.creditbank.loanmanagementservice.dto.payment.PaymentType;
+import ru.creditbank.loanmanagementservice.entity.PaymentType;
 import ru.creditbank.loanmanagementservice.entity.LoanEntity;
 import ru.creditbank.loanmanagementservice.entity.PaymentScheduleEntity;
 import ru.creditbank.loanmanagementservice.entity.PaymentScheduleStatus;
