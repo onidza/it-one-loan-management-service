@@ -42,6 +42,17 @@ public class SecurityConfig {
             )
             .hasRole("CREDIT_MANAGER")
 
+            .requestMatchers(HttpMethod.GET,
+                "/loan-management-service/api/v1/payment/loans",
+                "/loan-management-service/api/v1/payment/history"
+            )
+            .hasRole("USER")
+
+            .requestMatchers(HttpMethod.POST,
+                "/loan-management-service/api/v1/payment"
+            )
+            .hasRole("USER")
+
             .anyRequest().denyAll()
         )
 
