@@ -49,14 +49,13 @@ public class PaymentScheduleEntity {
   )
   private LoanEntity loan;
 
-  //number of payment (1-n)
   @Column(name = "installment_number", nullable = false)
   private Integer installmentNumber;
 
   @Column(name = "payment_date", nullable = false)
   private LocalDate paymentDate;
 
-  //need to pay for this month without %
+  //FIXED: need to pay for this month without %
   @Column(
       name = "principal_amount",
       precision = 15,
@@ -65,7 +64,7 @@ public class PaymentScheduleEntity {
   )
   private BigDecimal principalAmount;
 
-  //% for this month
+  //FIXED: % for this month
   @Column(
       name = "interest_amount",
       precision = 15,
@@ -74,7 +73,7 @@ public class PaymentScheduleEntity {
   )
   private BigDecimal interestAmount;
 
-  //full payment = principalAmount + interestAmount
+  //FIXED: full payment = principalAmount + interestAmount
   @Column(
       name = "total_amount",
       precision = 15,
@@ -83,7 +82,7 @@ public class PaymentScheduleEntity {
   )
   private BigDecimal totalAmount;
 
-  //expected remaining loan amount after this full payment
+  //FIXED: expected remaining loan amount after this full payment
   @Column(
       name = "remaining_principal",
       precision = 15,
@@ -92,7 +91,7 @@ public class PaymentScheduleEntity {
   )
   private BigDecimal remainingPrincipal;
 
-  //actual payment for this installment
+  //sum of payments for this installment, default = 0
   @Column(
       name = "paid_amount",
       precision = 15,
@@ -131,5 +130,47 @@ public class PaymentScheduleEntity {
     this.remainingPrincipal = remainingPrincipal;
     this.paidAmount = BigDecimal.ZERO;
     this.status = PaymentScheduleStatus.PLANNED;
+  }
+
+  public void markPaid() {
+    this.status = PaymentScheduleStatus.PAID;
+    this.paidAmount = this.totalAmount;
+  }
+
+  public BigDecimal processPartialPayment(
+      BigDecimal currentAmount
+  ) {
+    BigDecimal principalPaidBefore =
+        this.paidAmount
+            .subtract(this.interestAmount)
+            .max(BigDecimal.ZERO);
+
+    this.paidAmount =
+        this.paidAmount.add(currentAmount);
+
+    BigDecimal principalPaidAfter =
+        this.paidAmount
+            .subtract(this.interestAmount)
+            .max(BigDecimal.ZERO);
+
+    this.status = PaymentScheduleStatus.PARTIALLY_PAID;
+
+    return principalPaidAfter.subtract(principalPaidBefore);
+  }
+
+  public void recalculate(
+      BigDecimal principalAmount,
+      BigDecimal interestAmount,
+      BigDecimal totalAmount,
+      BigDecimal remainingPrincipal
+  ) {
+    this.principalAmount = principalAmount;
+    this.interestAmount = interestAmount;
+    this.totalAmount = totalAmount;
+    this.remainingPrincipal = remainingPrincipal;
+  }
+
+  public void cancel() {
+    this.status = PaymentScheduleStatus.CANCELLED;
   }
 }

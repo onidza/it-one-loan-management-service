@@ -5,7 +5,6 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import org.springframework.stereotype.Component;
 import ru.creditbank.loanmanagementservice.dto.calculate.SchedulePayment;
-import ru.creditbank.loanmanagementservice.entity.LoanEntity;
 
 @Component
 public class PaymentScheduleCalculator {
@@ -14,18 +13,20 @@ public class PaymentScheduleCalculator {
   private static final int MONEY_SCALE = 2;
 
   public SchedulePayment calculate(
-      LoanEntity loan,
+      BigDecimal principal,
+      BigDecimal annualInterestRate,
+      int termMonths,
       int installmentNumber,
       BigDecimal remainingPrincipal
   ) {
-    BigDecimal monthlyRate = loan.getInterestRate()
+    BigDecimal monthlyRate = annualInterestRate
         .divide(BigDecimal.valueOf(100), MC)
         .divide(BigDecimal.valueOf(12), MC);
 
     BigDecimal monthlyPayment = calculateAnnuityPayment(
-        loan.getTotalAmount(),
+        principal,
         monthlyRate,
-        loan.getTermMonths()
+        termMonths
     );
 
     BigDecimal interestAmount = remainingPrincipal
@@ -35,7 +36,7 @@ public class PaymentScheduleCalculator {
     BigDecimal principalAmount;
     BigDecimal totalAmount;
 
-    if (installmentNumber == loan.getTermMonths()) {
+    if (installmentNumber == termMonths) {
       principalAmount = remainingPrincipal;
 
       totalAmount = principalAmount
@@ -75,8 +76,8 @@ public class PaymentScheduleCalculator {
         .multiply(monthlyRate, MC)
         .multiply(factor, MC);
 
-    BigDecimal denominator = factor
-        .subtract(BigDecimal.ONE);
+    BigDecimal denominator =
+        factor.subtract(BigDecimal.ONE);
 
     return numerator
         .divide(denominator, MC)

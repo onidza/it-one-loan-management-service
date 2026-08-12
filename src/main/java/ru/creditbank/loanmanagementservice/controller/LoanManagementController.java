@@ -49,5 +49,4 @@ public class LoanManagementController {
   ) {
     return paymentService.getPaymentHistory(loanId);
   }
-
 }

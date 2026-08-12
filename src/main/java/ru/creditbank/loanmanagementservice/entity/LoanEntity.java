@@ -114,4 +114,34 @@ public class LoanEntity {
     this.nextPaymentDate = nextPaymentDate;
     this.status = LoanStatus.ACTIVE;
   }
+
+  public void processFullPayment(
+      BigDecimal remainingPrincipal,
+      LocalDate nextPaymentDate
+  ) {
+    this.remainingAmount = remainingPrincipal;
+    this.nextPaymentDate = nextPaymentDate;
+
+    if (remainingPrincipal.signum() == 0) {
+      this.status = LoanStatus.CLOSED;
+      this.nextPaymentDate = null;
+    }
+  }
+
+  public void processPartialPayment(
+      BigDecimal paidPrincipal
+  ) {
+    this.remainingAmount =
+        this.remainingAmount.subtract(paidPrincipal);
+  }
+
+  public void processEarlyPayment(BigDecimal amount) {
+    this.remainingAmount =
+        this.remainingAmount.subtract(amount);
+
+    if (this.remainingAmount.signum() == 0) {
+      this.status = LoanStatus.CLOSED;
+      this.nextPaymentDate = null;
+    }
+  }
 }
