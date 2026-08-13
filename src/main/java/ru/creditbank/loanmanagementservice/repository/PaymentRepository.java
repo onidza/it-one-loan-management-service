@@ -9,5 +9,5 @@ import ru.creditbank.loanmanagementservice.entity.PaymentEntity;
 @Repository
 public interface PaymentRepository extends JpaRepository<PaymentEntity, UUID> {
 
-  List<PaymentEntity> findAllByLoanId(UUID loanId);
+  List<PaymentEntity> findAllByLoanIdOrderByPaymentDateDesc(UUID loanId);
 }

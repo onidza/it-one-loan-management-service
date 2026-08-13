@@ -89,7 +89,7 @@ public class PaymentService {
     }
 
     List<PaymentHistoryItemDTO> payments =
-        paymentRepository.findAllByLoanId(loanId)
+        paymentRepository.findAllByLoanIdOrderByPaymentDateDesc(loanId)
             .stream()
             .map(payment -> new PaymentHistoryItemDTO(
                 payment.getId(),
