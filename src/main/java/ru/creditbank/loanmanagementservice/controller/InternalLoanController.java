@@ -28,6 +28,16 @@ public class InternalLoanController {
   public CreateLoanResponseDTO createLoan(
       @Valid @RequestBody CreateLoanRequestDTO request
   ) {
+    log.info(
+        "Received internal create loan request, applicationId = {}, userId = {}, "
+            + "totalAmount = {}, termMonths = {}, interestRate = {}",
+        request.creditApplicationId(),
+        request.userId(),
+        request.totalAmount(),
+        request.termMonths(),
+        request.interestRate()
+    );
+
     return loanService.createLoan(request);
   }
 
@@ -35,6 +45,11 @@ public class InternalLoanController {
   public CreateScheduleResponseDTO createSchedule(
       @PathVariable UUID loanId
   ) {
+    log.info(
+        "Received internal create payment schedule request, loanId = {}",
+        loanId
+    );
+
     return scheduleService.createSchedule(loanId);
   }
 }

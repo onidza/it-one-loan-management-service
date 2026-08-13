@@ -63,6 +63,12 @@ public class LoanService {
             ))
         .toList();
 
+    log.info(
+        "Loans fetched for userId = {}, count = {}",
+        userId,
+        loans.size()
+    );
+
     return new UserLoansResponseDTO(loans);
   }
 }

@@ -38,10 +38,11 @@ public class PaymentService {
       CreatePaymentRequestDTO request,
       Jwt jwt
   ) {
+    UUID userId = UUID.fromString(jwt.getClaimAsString("user_id"));
+
     LoanEntity loan = loanRepository.findById(request.loanId())
         .orElseThrow(() -> new LoanNotFoundException(request.loanId()));
 
-    UUID userId = UUID.fromString(jwt.getClaimAsString("user_id"));
     if (!userId.equals(loan.getUserId())) {
       throw new LoanAccessDeniedException();
     }
@@ -66,6 +67,16 @@ public class PaymentService {
             request.paymentType(),
             result.newBalance()
         )
+    );
+
+    log.info(
+        "Payment successfully processed, paymentId = {}, loanId = {}, "
+            + "paymentType = {}, amount = {}, newBalance = {}",
+        payment.getId(),
+        loan.getId(),
+        request.paymentType(),
+        request.amount(),
+        result.newBalance()
     );
 
     return new PaymentResponseDTO(
@@ -103,6 +114,12 @@ public class PaymentService {
     if (payments.isEmpty()) {
       throw new PaymentsNotFoundException(loanId);
     }
+
+    log.info(
+        "Payment history retrieved, loanId = {}, paymentsCount = {}",
+        loanId,
+        payments.size()
+    );
 
     return new PaymentHistoryResponseDTO(payments);
   }
