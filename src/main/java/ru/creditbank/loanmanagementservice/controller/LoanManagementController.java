@@ -32,6 +32,8 @@ public class LoanManagementController {
   public UserLoansResponseDTO getUserLoans(
       @AuthenticationPrincipal Jwt jwt
   ) {
+    log.info("Received get user loans request");
+
     return loanService.getUserLoans(jwt);
   }
 
@@ -40,6 +42,12 @@ public class LoanManagementController {
       @Valid @RequestBody CreatePaymentRequestDTO request,
       @AuthenticationPrincipal Jwt jwt
   ) {
+    log.info(
+        "Received create payment request, loanId = {}, paymentType = {}",
+        request.loanId(),
+        request.paymentType()
+    );
+
     return paymentService.createPayment(request, jwt);
   }
 
@@ -48,6 +56,11 @@ public class LoanManagementController {
       @RequestParam UUID loanId,
       @AuthenticationPrincipal Jwt jwt
   ) {
+    log.info(
+        "Received payment history request, loanId = {}",
+        loanId
+    );
+
     return paymentService.getPaymentHistory(loanId, jwt);
   }
 }
