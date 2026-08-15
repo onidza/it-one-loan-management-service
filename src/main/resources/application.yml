@@ -5,7 +5,6 @@ spring:
   application:
     name: loan-management-service
 
-
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -23,5 +22,5 @@ logging:
 
 security:
   jwt:
-    issuer: apigateway #.env
-    secret: McHowHFh9zfPUjAu6VdpgKm+zzOTzrpNmElKZana3RM= #.env
+    issuer: ${SECURITY_JWT_ISSUER:apigateway} #.env
+    secret: ${SECURITY_JWT_SECRET:McHowHFh9zfPUjAu6VdpgKm+zzOTzrpNmElKZana3RM=} #.env
