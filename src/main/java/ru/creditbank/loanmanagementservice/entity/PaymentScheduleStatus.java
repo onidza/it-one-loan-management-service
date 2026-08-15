@@ -4,5 +4,6 @@ public enum PaymentScheduleStatus {
   PLANNED,
   PARTIALLY_PAID,
   PAID,
-  CANCELLED,
+  OVERDUE,
+  CANCELLED
 }
