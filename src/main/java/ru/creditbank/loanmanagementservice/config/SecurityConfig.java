@@ -40,11 +40,12 @@ public class SecurityConfig {
                 "/loan-management-service/internal/api/v1/loans",
                 "/loan-management-service/internal/api/v1/loans/{loanId}/schedule"
             )
-            .hasRole("CREDIT_MANAGER")
+            .hasAnyRole("USER", "CREDIT_MANAGER")
 
             .requestMatchers(HttpMethod.GET,
                 "/loan-management-service/api/v1/payment/loans",
-                "/loan-management-service/api/v1/payment/history"
+                "/loan-management-service/api/v1/payment/history",
+                "/loan-management-service/internal/api/v1/credit-profile/user/{userId}"
             )
             .hasRole("USER")
 

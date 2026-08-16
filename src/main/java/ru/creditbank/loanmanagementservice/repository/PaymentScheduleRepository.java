@@ -50,4 +50,6 @@ public interface PaymentScheduleRepository extends JpaRepository<PaymentSchedule
       @Param("overdue") PaymentScheduleStatus overdue,
       @Param("today") LocalDate today
   );
+
+  long countByLoanUserIdAndStatus(UUID loanUserId, PaymentScheduleStatus status);
 }
