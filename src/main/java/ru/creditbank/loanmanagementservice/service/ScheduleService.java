@@ -38,6 +38,23 @@ public class ScheduleService {
     LoanEntity loan = loanRepository.findById(loanId)
         .orElseThrow(() -> new LoanNotFoundException(loanId));
 
+    List<PaymentScheduleEntity> existingSchedule =
+        scheduleRepository.findAllByLoanId(loanId);
+
+    if (!existingSchedule.isEmpty()) {
+      log.info(
+          "Payment schedule already exists for loanId = {}, returning existing schedule",
+          loanId
+      );
+
+      return new CreateScheduleResponseDTO(
+          loan.getId(),
+          existingSchedule.size(),
+          loan.getNextPaymentDate(),
+          loan.getStatus()
+      );
+    }
+
     if (loan.getStatus() != LoanStatus.CREATING) {
       throw new InvalidLoanStatusCreateScheduleException();
     }
@@ -106,7 +123,7 @@ public class ScheduleService {
   public void recalculateSchedule(LoanEntity loan) {
     List<PaymentScheduleEntity> plannedSchedule =
         scheduleRepository
-            .findAllByLoanIdAndStatusOrderByInstallmentNumber(
+            .findAllByLoanId(
                 loan.getId(),
                 PaymentScheduleStatus.PLANNED
             );

@@ -37,8 +37,8 @@ public class LoanEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
-
   private UUID id;
+
   @Column(
       name = "credit_application_id",
       nullable = false,

@@ -1,6 +1,7 @@
 package ru.creditbank.loanmanagementservice.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,6 @@ import ru.creditbank.loanmanagementservice.dto.internal.CreateLoanResponseDTO;
 import ru.creditbank.loanmanagementservice.dto.loan.LoanInfoDTO;
 import ru.creditbank.loanmanagementservice.dto.loan.UserLoansResponseDTO;
 import ru.creditbank.loanmanagementservice.entity.LoanEntity;
-import ru.creditbank.loanmanagementservice.exception.DuplicateLoanException;
 import ru.creditbank.loanmanagementservice.repository.LoanRepository;
 
 @Service
@@ -24,8 +24,22 @@ public class LoanService {
 
   @Transactional(rollbackFor = Exception.class)
   public CreateLoanResponseDTO createLoan(CreateLoanRequestDTO request) {
-    if (loanRepository.existsByCreditApplicationId(request.creditApplicationId())) {
-      throw new DuplicateLoanException();
+    Optional<LoanEntity> existingLoan =
+        loanRepository.findByCreditApplicationId((request.creditApplicationId()));
+
+    if (existingLoan.isPresent()) {
+      LoanEntity loan = existingLoan.get();
+
+      log.info(
+          "Loan already exists for applicationId = {}, returning existing loanId = {}",
+          request.creditApplicationId(),
+          loan.getId()
+      );
+
+      return new CreateLoanResponseDTO(
+          loan.getId(),
+          loan.getStatus()
+      );
     }
 
     LoanEntity loan = loanRepository.save(

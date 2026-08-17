@@ -2,6 +2,7 @@ package ru.creditbank.loanmanagementservice.repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,8 +13,6 @@ import ru.creditbank.loanmanagementservice.entity.LoanStatus;
 
 @Repository
 public interface LoanRepository extends JpaRepository<LoanEntity, UUID> {
-
-  boolean existsByCreditApplicationId(UUID applicationId);
 
   List<LoanEntity> findAllByUserId(UUID userId);
 
@@ -27,4 +26,6 @@ public interface LoanRepository extends JpaRepository<LoanEntity, UUID> {
       @Param("userId") UUID userId,
       @Param("activeStatus") LoanStatus activeStatus
   );
+
+  Optional<LoanEntity> findByCreditApplicationId(UUID creditApplicationId);
 }

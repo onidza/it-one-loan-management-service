@@ -28,10 +28,13 @@ public interface PaymentScheduleRepository extends JpaRepository<PaymentSchedule
   );
 
   List<PaymentScheduleEntity>
-  findAllByLoanIdAndStatusOrderByInstallmentNumber(
+  findAllByLoanId(
       UUID loanId,
       PaymentScheduleStatus status
   );
+
+  List<PaymentScheduleEntity>
+  findAllByLoanId(UUID loanId);
 
   boolean existsByLoanIdAndStatusIs(
       UUID loanId,
@@ -39,12 +42,12 @@ public interface PaymentScheduleRepository extends JpaRepository<PaymentSchedule
 
   @Modifying(clearAutomatically = true)
   @Query("""
-    update PaymentScheduleEntity p
-    set p.status = :overdue,
-        p.version = p.version + 1
-    where p.status in :statuses
-      and p.paymentDate < :today
-    """)
+      update PaymentScheduleEntity p
+      set p.status = :overdue,
+          p.version = p.version + 1
+      where p.status in :statuses
+        and p.paymentDate < :today
+      """)
   int markOverduePayments(
       @Param("statuses") Collection<PaymentScheduleStatus> statuses,
       @Param("overdue") PaymentScheduleStatus overdue,
