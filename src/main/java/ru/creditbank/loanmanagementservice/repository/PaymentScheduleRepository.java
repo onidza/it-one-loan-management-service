@@ -27,8 +27,7 @@ public interface PaymentScheduleRepository extends JpaRepository<PaymentSchedule
       Integer installmentNumber
   );
 
-  List<PaymentScheduleEntity>
-  findAllByLoanId(
+  List<PaymentScheduleEntity> findAllByLoanIdAndStatusIs(
       UUID loanId,
       PaymentScheduleStatus status
   );

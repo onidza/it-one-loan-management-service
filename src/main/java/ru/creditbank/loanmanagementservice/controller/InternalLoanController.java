@@ -13,7 +13,7 @@ import ru.creditbank.loanmanagementservice.dto.internal.CreateLoanRequestDTO;
 import ru.creditbank.loanmanagementservice.dto.internal.CreateLoanResponseDTO;
 import ru.creditbank.loanmanagementservice.dto.internal.CreateScheduleResponseDTO;
 import ru.creditbank.loanmanagementservice.service.LoanService;
-import ru.creditbank.loanmanagementservice.service.ScheduleService;
+import ru.creditbank.loanmanagementservice.service.PaymentScheduleService;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ import ru.creditbank.loanmanagementservice.service.ScheduleService;
 public class InternalLoanController {
 
   private final LoanService loanService;
-  private final ScheduleService scheduleService;
+  private final PaymentScheduleService paymentScheduleService;
 
   @PostMapping
   public CreateLoanResponseDTO createLoan(
@@ -50,6 +50,6 @@ public class InternalLoanController {
         loanId
     );
 
-    return scheduleService.createSchedule(loanId);
+    return paymentScheduleService.createSchedule(loanId);
   }
 }

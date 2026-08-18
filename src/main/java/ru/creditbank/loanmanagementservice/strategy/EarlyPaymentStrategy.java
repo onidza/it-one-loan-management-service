@@ -10,14 +10,14 @@ import ru.creditbank.loanmanagementservice.entity.PaymentType;
 import ru.creditbank.loanmanagementservice.exception.InvalidPaymentScheduleEarlyAmountException;
 import ru.creditbank.loanmanagementservice.exception.InvalidPaymentScheduleEarlyStatusException;
 import ru.creditbank.loanmanagementservice.repository.PaymentScheduleRepository;
-import ru.creditbank.loanmanagementservice.service.ScheduleService;
+import ru.creditbank.loanmanagementservice.service.PaymentScheduleService;
 
 @Component
 @RequiredArgsConstructor
 public class EarlyPaymentStrategy implements PaymentStrategy {
 
   private final PaymentScheduleRepository scheduleRepository;
-  private final ScheduleService scheduleService;
+  private final PaymentScheduleService paymentScheduleService;
 
   @Override
   public PaymentType getType() {
@@ -41,7 +41,7 @@ public class EarlyPaymentStrategy implements PaymentStrategy {
     }
 
     loan.processEarlyPayment(amount);
-    scheduleService.recalculateSchedule(loan);
+    paymentScheduleService.recalculateSchedule(loan);
 
     return new PaymentProcessingResultDTO(
         loan.getRemainingAmount(),

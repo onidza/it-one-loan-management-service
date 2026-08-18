@@ -28,8 +28,8 @@ import ru.creditbank.loanmanagementservice.repository.LoanRepository;
 import ru.creditbank.loanmanagementservice.repository.PaymentRepository;
 import ru.creditbank.loanmanagementservice.repository.PaymentScheduleRepository;
 import ru.creditbank.loanmanagementservice.service.LoanService;
+import ru.creditbank.loanmanagementservice.service.PaymentScheduleService;
 import ru.creditbank.loanmanagementservice.service.PaymentService;
-import ru.creditbank.loanmanagementservice.service.ScheduleService;
 
 @SpringBootTest
 @Import(TestcontainersConfiguration.class)
@@ -43,7 +43,7 @@ class LoanServiceIntegrationTest {
   private PaymentService paymentService;
 
   @Autowired
-  private ScheduleService scheduleService;
+  private PaymentScheduleService paymentScheduleService;
 
   @Autowired
   private LoanRepository loanRepository;
@@ -170,7 +170,7 @@ class LoanServiceIntegrationTest {
     CreateLoanResponseDTO createdLoan =
         loanService.createLoan(loanRequest);
 
-    scheduleService.createSchedule(
+    paymentScheduleService.createSchedule(
         createdLoan.loanId()
     );
 
@@ -245,7 +245,7 @@ class LoanServiceIntegrationTest {
     CreateLoanResponseDTO createdLoan =
         loanService.createLoan(loanRequest);
 
-    scheduleService.createSchedule(createdLoan.loanId());
+    paymentScheduleService.createSchedule(createdLoan.loanId());
 
     Jwt jwt = createJwt(userId);
 

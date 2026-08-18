@@ -26,7 +26,7 @@ import ru.creditbank.loanmanagementservice.repository.PaymentScheduleRepository;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ScheduleService {
+public class PaymentScheduleService {
 
   private final PaymentScheduleRepository scheduleRepository;
   private final LoanRepository loanRepository;
@@ -123,7 +123,7 @@ public class ScheduleService {
   public void recalculateSchedule(LoanEntity loan) {
     List<PaymentScheduleEntity> plannedSchedule =
         scheduleRepository
-            .findAllByLoanId(
+            .findAllByLoanIdAndStatusIs(
                 loan.getId(),
                 PaymentScheduleStatus.PLANNED
             );
