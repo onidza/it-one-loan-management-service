@@ -126,6 +126,11 @@
       <groupId>org.testcontainers</groupId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>net.logstash.logback</groupId>
+      <artifactId>logstash-logback-encoder</artifactId>
+      <version>8.1</version>
+    </dependency>
   </dependencies>
   <description>Service for managing loans and payments</description>
   <groupId>ru.creditbank</groupId>
