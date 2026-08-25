@@ -54,6 +54,8 @@ public class SecurityConfig {
             )
             .hasRole("USER")
 
+            .requestMatchers("/actuator/health").permitAll()
+
             .anyRequest().denyAll()
         )
 
