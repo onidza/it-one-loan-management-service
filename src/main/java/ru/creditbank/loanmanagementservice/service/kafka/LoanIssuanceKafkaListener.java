@@ -12,7 +12,7 @@ import ru.creditbank.loanmanagementservice.dto.kafka.LoanIssuanceEventDTO;
 public class LoanIssuanceKafkaListener {
 
   @KafkaListener(
-      topics = "credit.events.LOAN_ISSUANCE",
+      topics = "credit.events",
       groupId = "loan-management-service"
   )
   public void handle(
